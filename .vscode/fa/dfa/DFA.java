@@ -48,16 +48,24 @@ public class DFA implements DFAInterface {
 
     @Override
     public Set<? extends State> getFinalStates() {
-        for(State eachState : getStates()) {
-
+        Set<DFAState> ret = new TreeSet<DFAState>();
+        for(DFAState eachState : states) {
+            if(eachState.getFinal()) {
+                ret.add(eachState);
+            }
         }
-        return null;
+        return ret;
     }
 
     @Override
     public State getStartState() {
-
-        return null;
+        State ret = null;
+        for(DFAState eachState : states) {
+            if(eachState.getStart()) {
+                ret = eachState;
+            }
+        }
+        return ret;
     }
 
     @Override

@@ -18,7 +18,7 @@ public class DFAState extends State {
         this.isStart = bool;
     }
 
-    public boolean getStart(DFAState state) {
+    public boolean getStart() {
         return isStart;
     }
 
@@ -26,7 +26,7 @@ public class DFAState extends State {
         this.isFinal = bool;
     }
 
-    public boolean getFinal(DFAState state) {
+    public boolean getFinal() {
         return isFinal;
     }
 
