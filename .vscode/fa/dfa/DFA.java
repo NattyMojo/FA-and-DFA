@@ -1,6 +1,7 @@
 package fa.dfa;
 
 import java.util.Set;
+import java.util.TreeSet;
 import java.util.LinkedList;
 import fa.State;
 
@@ -12,6 +13,7 @@ public class DFA implements DFAInterface {
     public void addStartState(String name) {
         DFAState start = new DFAState();
         start.setName(name);
+        start.setStart(true);
         states.add(0, start);
     }
 
@@ -19,13 +21,14 @@ public class DFA implements DFAInterface {
     public void addState(String name) {
         DFAState newState = new DFAState();
         newState.setName(name);
-        states.add(newState)
+        states.add(newState);
     }
 
     @Override
     public void addFinalState(String name) {
         DFAState finalState = new DFAState();
         finalState.setName(name);
+        finalState.setFinal(true);
         states.add(finalState);
     }
 
@@ -36,7 +39,7 @@ public class DFA implements DFAInterface {
 
     @Override
     public Set<? extends State> getStates() {
-        Set<DFAState> ret = new Set<DFAState>();
+        Set<DFAState> ret = new TreeSet<DFAState>();
         for(int i = 0; i < states.size(); i++) {
             ret.add(states.get(i));
         }
@@ -45,7 +48,9 @@ public class DFA implements DFAInterface {
 
     @Override
     public Set<? extends State> getFinalStates() {
+        for(State eachState : getStates()) {
 
+        }
         return null;
     }
 

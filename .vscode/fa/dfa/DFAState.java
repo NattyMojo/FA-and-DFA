@@ -4,6 +4,8 @@ import fa.State;
 
 public class DFAState extends State {
     
+    public boolean isStart, isFinal;
+
     public String getName() {
         return super.getName();
     }
@@ -11,7 +13,23 @@ public class DFAState extends State {
     public void setName(String name) {
         super.name = name;
     }
-    
+
+    public void setStart(boolean bool) {
+        this.isStart = bool;
+    }
+
+    public boolean getStart(DFAState state) {
+        return isStart;
+    }
+
+    public void setFinal(boolean bool) {
+        this.isFinal = bool;
+    }
+
+    public boolean getFinal(DFAState state) {
+        return isFinal;
+    }
+
     public String toString() {
         return super.toString();
     }
