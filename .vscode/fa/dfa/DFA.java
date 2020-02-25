@@ -100,10 +100,21 @@ public class DFA implements DFAInterface {
         return false;
     }
 
+    //Shhhh this is an absolute mess but it will work (I think)
     @Override
     public State getToState(DFAState from, char onSymb) {
-
-        return null;
+        State to;
+        for(String name : transitions) {
+            if(from.getName() == name) {
+                String s = transitions.get(transitions.indexOf(name)+2);
+                for(int i = 0; i < states.size(); i++){
+                    if(states.get(i).getName() == s){
+                        to = states.get(i);
+                    }
+                }
+            }
+        }
+        return to;
     }
 
     private boolean langHasChar(char check) {
