@@ -1,5 +1,6 @@
 package fa.dfa;
 
+
 import fa.State;
 
 public class DFAState extends State {
@@ -33,6 +34,5 @@ public class DFAState extends State {
     public String toString() {
         return super.toString();
     }
-
 
 }
