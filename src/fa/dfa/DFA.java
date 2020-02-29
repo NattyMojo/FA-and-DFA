@@ -114,6 +114,7 @@ public class DFA implements DFAInterface {
     @Override
     public String toString() {
         return "This is where a DFA would be";
+        //If I had one...-_- Dinkleburgggg
     }
 
     /**
