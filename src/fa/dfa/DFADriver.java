@@ -57,7 +57,7 @@ public class DFADriver {
 				dfa.addTransition(String.valueOf(tran[0]), tran[1], String.valueOf(tran[2]));
 			}
 
-			//print out dfa in the specified format.
+			//print out fa.dfa in the specified format.
 			System.out.println(dfa.toString());
 			//get the compliment
 			DFA dfaC = dfa.complement();
