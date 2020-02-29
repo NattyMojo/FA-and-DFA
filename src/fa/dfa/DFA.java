@@ -4,6 +4,11 @@ import java.util.*;
 
 import fa.State;
 
+/**
+ * A Java implementation of a deterministic finite automaton.
+ *
+ * @author Nate St. George, Zach Luciano
+ */
 public class DFA implements DFAInterface {
 
     private HashSet<DFAState> states = new HashSet<>();
