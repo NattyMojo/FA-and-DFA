@@ -51,13 +51,13 @@ public class DFA implements DFAInterface {
     }
 
     @Override
-    public Set<DFAState> getStates() {
+    public HashSet<DFAState> getStates() {
         return states;
     }
 
     @Override
-    public Set<DFAState> getFinalStates() {
-        Set<DFAState> ret = new HashSet<>();
+    public HashSet<DFAState> getFinalStates() {
+        HashSet<DFAState> ret = new HashSet<>();
         for(DFAState state : states) {
             if(state.isFinal()) {
                 ret.add(state);
@@ -67,7 +67,7 @@ public class DFA implements DFAInterface {
     }
 
     @Override
-    public State getStartState() {
+    public DFAState getStartState() {
         for(DFAState state : states) {
             if(state.isStart()) {
                 return state;
@@ -83,17 +83,40 @@ public class DFA implements DFAInterface {
 
     @Override
     public DFA complement() {
-        return null;
+        DFA comp = new DFA();
+        for(DFAState state : states) {
+            comp.addState(state.getName());
+            if(state.isStart()) comp.makeStateStart(state.getName());
+            if(state.isFinal()) comp.makeStateFinal(state.getName());
+        }
+        return comp;
     }
 
     @Override
     public boolean accepts(String s) {
-        return traverseFA((DFAState) getStartState(), s).isFinal();
+        DFAState result = traverseFA(getStartState(), s);
+        if(result == null) {
+            return false;
+        }
+        return result.isFinal();
     }
 
     @Override
     public State getToState(DFAState from, char onSymb) {
         return from.getNext(onSymb);
+    }
+
+    @Override
+    public String toString() {
+        return "This is where a DFA would be";
+    }
+
+    public void makeStateStart(String name) {
+        if(stateNameExists(name)) getStateByName(name).setStart(true);
+    }
+
+    public void makeStateFinal(String name) {
+        if(stateNameExists(name)) getStateByName(name).setFinal(true);
     }
 
     /**
@@ -102,11 +125,10 @@ public class DFA implements DFAInterface {
      * @return true if exists, false otherwise
      */
     private boolean stateNameExists(String name) {
-        boolean containsName = false;
-        for(DFAState state : this.getStates()) {
-            containsName = state.getName().equals(name);
+        for(DFAState state : states) {
+            if(state.getName().equals(name)) return true;
         }
-        return containsName;
+        return false;
     }
 
     /**
@@ -115,7 +137,7 @@ public class DFA implements DFAInterface {
      * @return DFAState if it exists, null otherwise
      */
     private DFAState getStateByName(String name) {
-        for(DFAState state : this.getStates()) {
+        for(DFAState state : states) {
             if(state.getName().equals(name)) return state;
         }
         return null;
@@ -128,9 +150,8 @@ public class DFA implements DFAInterface {
      * @return Ending state
      */
     private DFAState traverseFA(DFAState state, String input) {
-        System.out.println("Trace -> State: " + state + " string: " + input);
+//        System.out.println("Trace -> State: " + state + " string: " + input);
         if(input.length() == 0) {
-            System.out.println("Done");
             return state;
         }
         char curr = input.toCharArray()[0];
