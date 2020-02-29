@@ -1,24 +1,20 @@
 package fa.dfa;
 
-import java.util.Set;
-import java.util.TreeSet;
-import java.util.ArrayList;
-import java.util.LinkedList;
+import java.util.*;
+
 import fa.State;
 
 public class DFA implements DFAInterface {
 
-    LinkedList<DFAState> states = new LinkedList<DFAState>();
-    ArrayList<Character> language = new ArrayList<Character>();
-    LinkedList<String> transitions = new LinkedList<String>(); //What if every odd value is a transition and every even
-                                                               //is the state, so q0(0) 1(1) q1(2) is q0 -> q1 on a 1?
+    private HashSet<DFAState> states = new HashSet<>();
+    private HashSet<Character> language = new HashSet<>();
 
     @Override
     public void addStartState(String name) {
         DFAState start = new DFAState();
         start.setName(name);
         start.setStart(true);
-        states.add(0, start);
+        states.add(start);
     }
 
     @Override
@@ -39,30 +35,32 @@ public class DFA implements DFAInterface {
     @Override
     public void addTransition(String fromState, char onSymb, String toState) {
         //Add the language character if it's not already in the language
-        if(!langHasChar(onSymb)) {
-            language.add(onSymb);
+        language.add(onSymb);
+        // Check that both states exist
+        if(stateNameExists(fromState) && stateNameExists(toState)) {
+            DFAState from = getStateByName(fromState);
+            // Check for existing connections from this state
+            if(from.hasTransition(onSymb)) {
+                System.out.println("State " + fromState + " already has a transition on " + onSymb + " to " + from.getNext(onSymb));
+            } else {
+                from.addTransition(onSymb, getStateByName(toState));
+            }
+        } else {
+            System.out.println("State " + (stateNameExists(fromState) ? toState : fromState) + " does not exist.");
         }
-        transitions.add(fromState);
-        String s = String.valueOf(onSymb);
-        transitions.add(s);
-        transitions.add(toState);
     }
 
     @Override
-    public Set<? extends State> getStates() {
-        Set<DFAState> ret = new TreeSet<DFAState>();
-        for(int i = 0; i < states.size(); i++) {
-            ret.add(states.get(i));
-        }
-        return ret;
+    public Set<DFAState> getStates() {
+        return states;
     }
 
     @Override
-    public Set<? extends State> getFinalStates() {
-        Set<DFAState> ret = new TreeSet<DFAState>();
-        for(DFAState eachState : states) {
-            if(eachState.getFinal()) {
-                ret.add(eachState);
+    public Set<DFAState> getFinalStates() {
+        Set<DFAState> ret = new HashSet<>();
+        for(DFAState state : states) {
+            if(state.isFinal()) {
+                ret.add(state);
             }
         }
         return ret;
@@ -70,59 +68,78 @@ public class DFA implements DFAInterface {
 
     @Override
     public State getStartState() {
-        State ret = null;
-        for(DFAState eachState : states) {
-            if(eachState.getStart()) {
-                ret = eachState;
+        for(DFAState state : states) {
+            if(state.isStart()) {
+                return state;
             }
         }
-        return ret;
+        return null;
     }
 
     @Override
     public Set<Character> getABC() {
-        Set<Character> abc = new TreeSet<Character>();
-        for(char tran : language) {
-            abc.add(tran);
-        }
-        return abc;
+        return language;
     }
 
     @Override
     public DFA complement() {
-
         return null;
     }
 
     @Override
     public boolean accepts(String s) {
-
-        return false;
+        return traverseFA((DFAState) getStartState(), s).isFinal();
     }
 
-    //Shhhh this is an absolute mess but it will work (I think)
     @Override
     public State getToState(DFAState from, char onSymb) {
-        State to;
-        for(String name : transitions) {
-            if(from.getName() == name) {
-                String s = transitions.get(transitions.indexOf(name)+2);
-                for(int i = 0; i < states.size(); i++){
-                    if(states.get(i).getName() == s){
-                        to = states.get(i);
-                    }
-                }
-            }
-        }
-        return to;
+        return from.getNext(onSymb);
     }
 
-    private boolean langHasChar(char check) {
-
-        if(language.contains(check)) {
-            return true;
+    /**
+     * Check if a state exists
+     * @param name Name of the state to check
+     * @return true if exists, false otherwise
+     */
+    private boolean stateNameExists(String name) {
+        boolean containsName = false;
+        for(DFAState state : this.getStates()) {
+            containsName = state.getName().equals(name);
         }
-        return false;
+        return containsName;
+    }
+
+    /**
+     * Get a DFAState given its name
+     * @param name Name of state to find
+     * @return DFAState if it exists, null otherwise
+     */
+    private DFAState getStateByName(String name) {
+        for(DFAState state : this.getStates()) {
+            if(state.getName().equals(name)) return state;
+        }
+        return null;
+    }
+
+    /**
+     * Recursive function for traversing the DFA
+     * @param state State to start at (or current state)
+     * @param input Current input string
+     * @return Ending state
+     */
+    private DFAState traverseFA(DFAState state, String input) {
+        System.out.println("Trace -> State: " + state + " string: " + input);
+        if(input.length() == 0) {
+            System.out.println("Done");
+            return state;
+        }
+        char curr = input.toCharArray()[0];
+        if(language.contains(curr)){
+            DFAState next = state.getNext(curr);
+            return traverseFA(next, input.substring(1));
+        } else {
+            return null;
+        }
     }
     
 }
