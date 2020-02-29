@@ -111,10 +111,18 @@ public class DFA implements DFAInterface {
         return "This is where a DFA would be";
     }
 
+    /**
+     * Make a given state into a start state
+     * @param name Name of state to make a start state
+     */
     public void makeStateStart(String name) {
         if(stateNameExists(name)) getStateByName(name).setStart(true);
     }
 
+    /**
+     * Make a given state into a final state
+     * @param name Name of state to make a final state
+     */
     public void makeStateFinal(String name) {
         if(stateNameExists(name)) getStateByName(name).setFinal(true);
     }
