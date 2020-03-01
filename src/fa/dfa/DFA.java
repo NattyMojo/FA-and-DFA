@@ -121,8 +121,46 @@ public class DFA implements DFAInterface {
 
     @Override
     public String toString() {
-        return "This is where a DFA would be";
-        //If I had one...-_- Dinkleburgggg
+        String ret = "Q = { ";
+    	//Assign Q
+    	for(DFAState state : states) {
+    		ret += state.getName() + " ";
+    	}
+    	ret += "}\nSigma = { ";
+    	
+    	//Assign Sigma
+    	for(Character c : language) {
+    		ret += c + " ";
+    	}
+    	
+    	//Assign Delta
+    	ret += "}\ndelta =\n\t\t";
+    	for(Character c : language) {
+    		ret += c + "\t";
+    	}
+    	ret += "\n";
+    	for(DFAState state : states) {
+    		ret += "\t";
+    		ret += state.getName() + "\t";
+    		for(Character c : language) {
+    			ret += state.getTransitions().get(c).getName() + "\t";
+    		}
+    		ret += "\n";
+    	}
+        
+    	//Assign q0
+    	ret += "q0 = " + getStartState().getName() + "\n";
+    	
+    	//Assign Final states
+    	ret += "F = { ";
+    	for(DFAState state : states) {
+            if(state.isFinal()) {
+                ret += state.getName() + " ";
+            }
+        }
+    	ret += "}\n";
+    	
+        return ret;
     }
 
     /**
