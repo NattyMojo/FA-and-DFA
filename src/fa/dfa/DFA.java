@@ -89,10 +89,18 @@ public class DFA implements DFAInterface {
     @Override
     public DFA complement() {
         DFA comp = new DFA();
+        comp.language = this.language;
         for(DFAState state : states) {
             comp.addState(state.getName());
-            if(state.isStart()) comp.makeStateStart(state.getName());
-            if(state.isFinal()) comp.makeStateFinal(state.getName());
+            comp.getStateByName(state.getName()).setFinal(!state.isFinal());
+            comp.getStateByName(state.getName()).setStart(state.isStart());
+        }
+        for(DFAState state : states) {
+        	for(Map.Entry<Character, DFAState> entry : state.getTransitions().entrySet()) {
+        		String stateName = entry.getValue().getName();
+        		DFAState actualState = comp.getStateByName(stateName);
+        		comp.getStateByName(state.getName()).addTransition(entry.getKey(),actualState);
+        	}
         }
         return comp;
     }
@@ -165,7 +173,7 @@ public class DFA implements DFAInterface {
      */
     private DFAState traverseFA(DFAState state, String input) {
 //        System.out.println("Trace -> State: " + state + " string: " + input);
-        if(input.length() == 0) {
+        if(input.length() == 0 || (input.length() == 1 && input.contains("e"))) {
             return state;
         }
         char curr = input.toCharArray()[0];
