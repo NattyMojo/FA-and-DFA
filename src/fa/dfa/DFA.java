@@ -14,6 +14,10 @@ public class DFA implements DFAInterface {
     private HashSet<DFAState> states = new HashSet<>();
     private HashSet<Character> language = new HashSet<>();
 
+    /**
+     * Adds a state to the DFA as a start state
+     * @param name - The name of the state to add
+     */
     @Override
     public void addStartState(String name) {
         DFAState start = new DFAState();
@@ -22,6 +26,10 @@ public class DFA implements DFAInterface {
         states.add(start);
     }
 
+    /**
+     * Adds an intermediate state to the DFA
+     * @param name - The name of the state to add
+     */
     @Override
     public void addState(String name) {
         DFAState newState = new DFAState();
@@ -29,6 +37,10 @@ public class DFA implements DFAInterface {
         states.add(newState);
     }
 
+    /**
+     * Adds a state to the DFA as an accepted final state
+     * @param name - The name of the state to add
+     */
     @Override
     public void addFinalState(String name) {
         DFAState finalState = new DFAState();
@@ -37,6 +49,12 @@ public class DFA implements DFAInterface {
         states.add(finalState);
     }
 
+    /**
+     * Assigns a transition to the DFA
+     * @param fromState - The state from which to travel from
+     * @param onSymb - The transition symbol
+     * @param toState - The state to go after seeing the transition symbol
+     */
     @Override
     public void addTransition(String fromState, char onSymb, String toState) {
         //Add the language character if it's not already in the language
@@ -55,11 +73,19 @@ public class DFA implements DFAInterface {
         }
     }
 
+    /**
+     * Returns a set containing all states in the DFA
+     * @return HashSet<DFAState> - HashSet containing states
+     */
     @Override
     public HashSet<DFAState> getStates() {
         return states;
     }
 
+    /**
+     * Returns a set containing all final (acceptance) states in the DFA
+     * @return HashSet<DFAState> - HashSet containing final states
+     */
     @Override
     public HashSet<DFAState> getFinalStates() {
         HashSet<DFAState> ret = new HashSet<>();
@@ -71,6 +97,10 @@ public class DFA implements DFAInterface {
         return ret;
     }
 
+    /**
+     * Returns the start state of the DFA
+     * @return DFAState - The start state
+     */
     @Override
     public DFAState getStartState() {
         for(DFAState state : states) {
@@ -81,11 +111,19 @@ public class DFA implements DFAInterface {
         return null;
     }
 
+    /**
+     * Returns the language of the DFA
+     * @param Set<Character> - Set containing all characters in the language
+     */
     @Override
     public Set<Character> getABC() {
         return language;
     }
 
+    /**
+     * Creates a DFA that is the complement of the DFA of which it is called from
+     * @return DFA - New complement DFA of current DFA
+     */
     @Override
     public DFA complement() {
         DFA comp = new DFA();
@@ -105,6 +143,7 @@ public class DFA implements DFAInterface {
         return comp;
     }
 
+    //No Javadoc because it is imported from the interface
     @Override
     public boolean accepts(String s) {
         DFAState result = traverseFA(getStartState(), s);
@@ -114,11 +153,13 @@ public class DFA implements DFAInterface {
         return result.isFinal();
     }
 
+  //No Javadoc because it is imported from the interface
     @Override
     public State getToState(DFAState from, char onSymb) {
         return from.getNext(onSymb);
     }
 
+  //No Javadoc because it is imported from the interface
     @Override
     public String toString() {
         String ret = "Q = { ";
