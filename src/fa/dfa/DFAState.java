@@ -1,97 +1,79 @@
 package fa.dfa;
 
-import fa.State;
-
 import java.util.HashMap;
 
-public class DFAState extends State {
-    
-    private boolean isStart, isFinal = false;
+import fa.State;
 
-    private HashMap<Character, DFAState> transitions = new HashMap<>();
+/**
+ * Jan 19, 2017
+ * Implementation of a DFA state, which
+ * mainly contains the information of its
+ * neighboring states.
+ * @author elenasherman
+ *
+ */
+public class DFAState extends State{
+	
 
-    /**
-     * @return the HashMap of transitions associated with this state
-     */
-    public HashMap<Character, DFAState> getTransitions() {
-        return transitions;
-    }
+	private HashMap<Character,DFAState> delta;//delta
+	private boolean isFinal;//remembers its type
+	
+	/**
+	 * Default constructor
+	 * @param name the state name
+	 */
+	public DFAState(String name){
+		initDefault(name);
+		isFinal = false;
+	}
+	
+	/**
+	 * Overlaoded constructor that sets the state type
+	 * @param name the state name
+	 * @param isFinal the type of state: true - final, false - nonfinal.
+	 */
+	public DFAState(String name, boolean isFinal){
+		initDefault(name);
+		this.isFinal = isFinal;
+	}
+	
+	private void initDefault(String name ){
+		this.name = name;
+		delta = new HashMap<Character, DFAState>();
+	}
+	
+	/**
+	 * Accessor for the state type
+	 * @return true if final and false otherwise
+	 */
+	public boolean isFinal(){
+		return isFinal;
+	}
+	
 
-    /**
-     * Add a transition to this state
-     * @param c Input to map this transition to
-     * @param next State to map to
-     * @return false if a transition on this character exists, true if the transition was added
-     */
-    public void addTransition(char c, DFAState next) {
-        if(!transitions.containsKey(c)) transitions.put(c, next);
-    }
-
-    /**
-     * Check if an input is already mapped to a transition
-     * @param c Transition input
-     * @return Whether or not this state has a transition on this input
-     */
-    public boolean hasTransition(char c) {
-        return transitions.containsKey(c);
-    }
-
-    /**
-     * Get the next state given an input
-     * @param c Input to check
-     * @return DFAState if a map exists for this input, null if no map exists
-     */
-    public DFAState getNext(char c) {
-        return transitions.get(c);
-    }
-
-    @Override
-    public String getName() {
-        return super.getName();
-    }
-
-    /**
-     * Set the name of this state
-     * @param name New state name
-     */
-    public void setName(String name) {
-        super.name = name;
-    }
-
-    /**
-     * Set whether this state is a start state or not
-     * @param bool New start state value
-     */
-    public void setStart(boolean bool) {
-        this.isStart = bool;
-    }
-
-    /**
-     * @return Whether this state is a start state or not
-     */
-    public boolean isStart() {
-        return isStart;
-    }
-
-    /**
-     * Set whether this state is a final state or not
-     * @param bool New final state value
-     */
-    public void setFinal(boolean bool) {
-        this.isFinal = bool;
-    }
-
-    /**
-     *
-     * @return Whether this state is a final state or not
-     */
-    public boolean isFinal() {
-        return isFinal;
-    }
-
-    @Override
-    public String toString() {
-        return super.toString();
-    }
-
+	/**
+	 * Add the transition from <code> this </code> object
+	 * @param onSymb the alphabet symbol
+	 * @param toState to DFA state
+	 */
+	public void addTransition(char onSymb, DFAState toState){
+		delta.put(onSymb, toState);
+	}
+	
+	/**
+	 * Retrieves the state that <code>this</code> transitions to
+	 * on the given symbol
+	 * @param symb - the alphabet symbol
+	 * @return the new state 
+	 */
+	public DFAState getTo(char symb){
+		DFAState ret = delta.get(symb);
+		if(ret == null){
+			 System.err.println("ERROR: DFAState.getTo(char symb) returns null on " + symb + " from " + name);
+			 System.exit(2);
+			}
+		return delta.get(symb);
+	}
+	
+	
 }

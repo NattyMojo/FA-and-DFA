@@ -2,8 +2,6 @@ package fa;
 
 import java.util.Set;
 
-import fa.dfa.DFA;
-
 
 public interface FAInterface {
 
@@ -11,19 +9,19 @@ public interface FAInterface {
 	 * Adds the initial state to the DFA instance
 	 * @param name is the label of the start state
 	 */
-	public void addStartState(String name);
+	public abstract void addStartState(String name);
 
 	/**
 	 * Adds a non-final, not initial state to the DFA instance
 	 * @param name is the label of the state 
 	 */
-	public void addState(String name);
+	public abstract void addState(String name);
 
 	/**
 	 * Adds a final state to the DFA
 	 * @param name is the label of the state
 	 */
-	public void addFinalState(String name);
+	public abstract void addFinalState(String name);
 
 
 	/**
@@ -32,40 +30,31 @@ public interface FAInterface {
 	 * @param onSymb is the symbol from the DFA's alphabet.
 	 * @param toState is the label of the state where the transition ends
 	 */
-	public  void addTransition(String fromState, char onSymb,
+	public abstract void addTransition(String fromState, char onSymb,
 			String toState);
 	
 	/**
 	 * Getter for Q
 	 * @return a set of states that FA has
 	 */
-	public Set<? extends State> getStates();
+	public abstract Set<? extends State> getStates();
 	
 	/**
 	 * Getter for F
 	 * @return a set of final states that FA has
 	 */
-	public Set<? extends State> getFinalStates();
+	public abstract Set<? extends State> getFinalStates();
 	
 	/**
 	 * Getter for q0
 	 * @return the start state of FA
 	 */
-	public State getStartState();
+	public abstract State getStartState();
 	
 	/**
-	 * Getter for Sigma
+	 * Getter for the alphabet Sigma
 	 * @return the alphabet of FA
 	 */
-	public Set<Character> getABC();
-	
-	
-	/**
-	 * Computes a copy of this DFA
-	 * which language is the complement
-	 * of this DFA's language.
-	 * @return a copy of this DFA
-	 */
-	public DFA complement();
+	public abstract Set<Character> getABC();
 
 }
