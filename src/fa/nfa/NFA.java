@@ -1,28 +1,47 @@
 package fa.nfa;
 
+import java.util.LinkedHashSet;
 import java.util.Set;
 
 import fa.State;
 import fa.dfa.DFA;
 
 public class NFA implements NFAInterface {
+    private Set<NFAState> states;
+	private NFAState start;
+    private Set<Character> ordAbc;
+    
+    public NFA() {
+        this.start = null;
+        this.states = new LinkedHashSet<NFAState>();
+		this.ordAbc = new LinkedHashSet<Character>();
+    }
 
+    /**
+     * Add a state as the start state of the NFA
+     * @param name - Name of the state
+     */
     @Override
     public void addStartState(String name) {
         // TODO Auto-generated method stub
-
+        NFAState state = new NFAState(name);
+        this.start = state;
+        this.states.add(state);
     }
 
     @Override
     public void addState(String name) {
         // TODO Auto-generated method stub
-
+        NFAState state = new NFAState(name);
+        this.states.add(state);
     }
 
     @Override
     public void addFinalState(String name) {
         // TODO Auto-generated method stub
-
+        NFAState state = new NFAState(name);
+        state.setFinal(true);
+        this.states.add(state);
     }
 
     @Override
