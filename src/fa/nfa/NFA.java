@@ -47,31 +47,39 @@ public class NFA implements NFAInterface {
     @Override
     public void addTransition(String fromState, char onSymb, String toState) {
         // TODO Auto-generated method stub
-
+        NFAState from = getStateByName(fromState);
+        NFAState to = getStateByName(toState);
+        from.addTransition(onSymb, to);
     }
 
     @Override
     public Set<? extends State> getStates() {
         // TODO Auto-generated method stub
-        return null;
+        return states;
     }
 
     @Override
     public Set<? extends State> getFinalStates() {
         // TODO Auto-generated method stub
-        return null;
+        Set<NFAState> retval = new LinkedHashSet<NFAState>();
+        for(NFAState curr : states) {
+            if(curr.isFinal()){
+                retval.add(curr);
+            }
+        }
+        return retval;
     }
 
     @Override
     public State getStartState() {
         // TODO Auto-generated method stub
-        return null;
+        return start;
     }
 
     @Override
     public Set<Character> getABC() {
         // TODO Auto-generated method stub
-        return null;
+        return ordAbc;
     }
 
     @Override
@@ -89,6 +97,15 @@ public class NFA implements NFAInterface {
     @Override
     public Set<NFAState> eClosure(NFAState s) {
         // TODO Auto-generated method stub
+        return null;
+    }
+
+    public NFAState getStateByName(String name) {
+        for(NFAState state : states) {
+            if(state.getName().equals(name)) {
+                return state;
+            }
+        }
         return null;
     }
     

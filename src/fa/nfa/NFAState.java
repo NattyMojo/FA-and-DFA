@@ -6,7 +6,7 @@ import fa.State;
 
 public class NFAState extends State {
 
-    private HashMap<Character,NFAState> delta;//delta
+    private HashMap<Character,NFAState> transitions;//delta
 	private boolean isFinal;//remembers its type
 	
 	/**
@@ -30,7 +30,7 @@ public class NFAState extends State {
 	
 	private void initDefault(String name ){
 		this.name = name;
-		delta = new HashMap<Character, NFAState>();
+		transitions = new HashMap<Character, NFAState>();
 	}
     
     /**
@@ -56,7 +56,7 @@ public class NFAState extends State {
 	 * @param toState to DFA state
 	 */
 	public void addTransition(char onSymb, NFAState toState){
-		delta.put(onSymb, toState);
+		transitions.put(onSymb, toState);
 	}
 	
 	/**
@@ -66,11 +66,11 @@ public class NFAState extends State {
 	 * @return the new state 
 	 */
 	public NFAState getTo(char symb){
-		NFAState ret = delta.get(symb);
+		NFAState ret = transitions.get(symb);
 		if(ret == null){
-			 System.err.println("ERROR: DFAState.getTo(char symb) returns null on " + symb + " from " + name);
+			 System.err.println("ERROR: NFAState.getTo(char symb) returns null on " + symb + " from " + name);
 			 System.exit(2);
 			}
-		return delta.get(symb);
+		return transitions.get(symb);
 	}
 }
