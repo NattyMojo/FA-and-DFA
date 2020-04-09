@@ -1,6 +1,10 @@
 package fa.nfa;
 
 import java.util.HashMap;
+import java.util.HashSet;
+import java.util.List;
+import java.util.Map;
+import java.util.Set;
 
 import fa.State;
 
@@ -65,12 +69,13 @@ public class NFAState extends State {
 	 * @param symb - the alphabet symbol
 	 * @return the new state 
 	 */
-	public NFAState getTo(char symb){
-		NFAState ret = transitions.get(symb);
-		if(ret == null){
-			 System.err.println("ERROR: NFAState.getTo(char symb) returns null on " + symb + " from " + name);
-			 System.exit(2);
+	public Set<NFAState> getTo(char symb){
+		Set<NFAState> ret = new HashSet<NFAState>();
+		for(Map.Entry<Character,NFAState> entry : transitions.entrySet()){
+			if(entry.getKey().equals(symb)){
+				ret.add(entry.getValue());
 			}
-		return transitions.get(symb);
+		}
+		return ret;
 	}
 }
