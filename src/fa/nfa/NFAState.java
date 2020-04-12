@@ -10,7 +10,7 @@ import fa.State;
 
 public class NFAState extends State {
 
-    private HashMap<Character,NFAState> transitions;//delta
+    private HashMap<Character,Set<NFAState>> transitions;//delta
 	private boolean isFinal;//remembers its type
 	
 	/**
@@ -34,7 +34,7 @@ public class NFAState extends State {
 	
 	private void initDefault(String name ){
 		this.name = name;
-		transitions = new HashMap<Character, NFAState>();
+		transitions = new HashMap<>();
 	}
     
     /**
@@ -60,7 +60,15 @@ public class NFAState extends State {
 	 * @param toState to DFA state
 	 */
 	public void addTransition(char onSymb, NFAState toState){
-		transitions.put(onSymb, toState);
+		if(transitions.containsKey(onSymb)) {
+			Set<NFAState> editedStates = transitions.get(onSymb);
+			editedStates.add(toState);
+			transitions.put(onSymb, editedStates);
+		} else {
+			Set<NFAState> newStates = new HashSet<>();
+			newStates.add(toState);
+			transitions.put(onSymb, newStates);
+		}
 	}
 	
 	/**
@@ -92,18 +100,22 @@ public class NFAState extends State {
 	 */
 	private Set<NFAState> recurseBuildStates(char symb, boolean consumed, Set<NFAState> visited) {
 		Set<NFAState> ret = new HashSet<>();
-		for(Map.Entry<Character,NFAState> entry : transitions.entrySet()) {
+		for(Map.Entry<Character,Set<NFAState>> entry : transitions.entrySet()) {
 			// If this transition consumes the symbol, mark it as consumed for the rest of the path and add the state to the set
 			if (entry.getKey().equals(symb) && !consumed) {
-				ret.add(entry.getValue());
-				visited.add(entry.getValue());
-				ret.addAll(entry.getValue().recurseBuildStates(symb, true, visited));
+				ret.addAll(entry.getValue());
+				visited.addAll(entry.getValue());
+				for(NFAState state : entry.getValue()) {
+					ret.addAll(state.recurseBuildStates(symb, true, visited));
+				}
 			}
 			// If the empty transition exists and input has already been consumed, add the value and all valid children
 			else if (entry.getKey().equals('e') && !visited.contains(entry.getValue())) {
-				if(consumed) ret.add(entry.getValue());
-				visited.add(entry.getValue());
-				ret.addAll(entry.getValue().recurseBuildStates(symb, consumed, visited));
+				if(consumed) ret.addAll(entry.getValue());
+				visited.addAll(entry.getValue());
+				for(NFAState state : entry.getValue()) {
+					ret.addAll(state.recurseBuildStates(symb, consumed, visited));
+				}
 			}
 		}
 		return ret;

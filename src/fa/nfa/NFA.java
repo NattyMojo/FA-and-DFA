@@ -98,9 +98,7 @@ public class NFA implements NFAInterface {
             // Find all connected states
             for(char c : getABC()) {
                 Set<NFAState> next = statesByInput(current, c);
-                System.out.println(next);
                 if(!DFAStateTracker.contains(next)) {
-                    System.out.println("New state");
                     DFAStateTracker.add(next);
                     queue.add(next);
                     boolean isFinal = false;
