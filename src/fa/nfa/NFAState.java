@@ -99,7 +99,7 @@ public class NFAState extends State {
 				}
 			}
 			// If the empty transition exists and input has already been consumed, add the value and all valid children
-			else if (entry.getKey().equals('e') && !visited.contains(entry.getValue())) {
+			else if (entry.getKey().equals('e') && !visited.containsAll(entry.getValue())) {
 				if(consumed) ret.addAll(entry.getValue());
 				visited.addAll(entry.getValue());
 				for(NFAState state : entry.getValue()) {
