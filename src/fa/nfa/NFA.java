@@ -92,15 +92,28 @@ public class NFA implements NFAInterface {
         Set<NFAState> initial = eClosure(start);
         dfa.addStartState(getStateName(initial));
         queue.add(initial);
+        DFAStateTracker.add(initial);
         while(!queue.isEmpty()) {
             Set<NFAState> current = queue.poll();
             // Find all connected states
             for(char c : getABC()) {
                 Set<NFAState> next = statesByInput(current, c);
+                System.out.println(next);
                 if(!DFAStateTracker.contains(next)) {
+                    System.out.println("New state");
                     DFAStateTracker.add(next);
                     queue.add(next);
-                    dfa.addState(getStateName(next));
+                    boolean isFinal = false;
+                    for(NFAState state : next) {
+                        if(state.isFinal()) {
+                            isFinal = true;
+                        }
+                    }
+                    if (isFinal) {
+                        dfa.addFinalState(getStateName(next));
+                    } else {
+                        dfa.addState(getStateName(next));
+                    }
                 }
                 dfa.addTransition(getStateName(current), c, getStateName(next));
             }
@@ -123,6 +136,7 @@ public class NFA implements NFAInterface {
     }
 
     private String getStateName(Set<NFAState> states) {
+        if(states.size() == 0) return "[]";
         StringBuilder result = new StringBuilder("[");
         for(NFAState state : states) {
             result.append(state.getName()).append(", ");
