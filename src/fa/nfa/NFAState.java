@@ -78,17 +78,6 @@ public class NFAState extends State {
 	 * @return the new states
 	 */
 	public Set<NFAState> getTo(char symb){
-//		Set<NFAState> ret = new HashSet<>();
-//		for(Map.Entry<Character,NFAState> entry : transitions.entrySet()){
-//			if(entry.getKey().equals(symb)){
-//				ret.add(entry.getValue());
-//			}
-//			// Include cases where empty transitions are used to get to a location
-//			if (entry.getKey().equals('e')) {
-//				ret.addAll(entry.getValue().getTo(symb));
-//			}
-//		}
-//		return ret;
 		return recurseBuildStates(symb, false, new HashSet<>());
 	}
 

@@ -5,21 +5,25 @@ import java.util.*;
 import fa.State;
 import fa.dfa.DFA;
 
+/**
+ * The NFA class implements an NFA with given input files.
+ * Creates a full NFA that can be traced to find final states and accept or reject strings.
+ * @author Zach Luciano, Nate St. George
+ */
 public class NFA implements NFAInterface {
     private Set<NFAState> states;
 	private NFAState start;
     private Set<Character> ordAbc;
     
+    /**
+     * Default constructor for NFA, initializes elements
+     */
     public NFA() {
         this.start = null;
         this.states = new LinkedHashSet<NFAState>();
 		this.ordAbc = new LinkedHashSet<Character>();
     }
 
-    /**
-     * Add a state as the start state of the NFA
-     * @param name - Name of the state
-     */
     @Override
     public void addStartState(String name) {
         // TODO Auto-generated method stub
@@ -133,6 +137,11 @@ public class NFA implements NFAInterface {
         return result;
     }
 
+    /**
+     * Get the name of a given state
+     * @param states - Set of NFAState to get the name of each and organize them
+     * @return String - String in the form of [name(,name...)]
+     */
     private String getStateName(Set<NFAState> states) {
         if(states.size() == 0) return "[]";
         StringBuilder result = new StringBuilder("[");
@@ -166,6 +175,11 @@ public class NFA implements NFAInterface {
         return result;
     }
 
+    /**
+     * Get NFAState given the state's name
+     * @param name - Name of the state to return
+     * @return NFAState with the name matching given
+     */
     public NFAState getStateByName(String name) {
         for(NFAState state : states) {
             if(state.getName().equals(name)) {
