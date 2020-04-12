@@ -64,16 +64,44 @@ public class NFAState extends State {
 	}
 	
 	/**
-	 * Retrieves the state that <code>this</code> transitions to
+	 * Retrieves the states that <code>this</code> transitions to
 	 * on the given symbol
 	 * @param symb - the alphabet symbol
-	 * @return the new state 
+	 * @return the new states
 	 */
 	public Set<NFAState> getTo(char symb){
-		Set<NFAState> ret = new HashSet<NFAState>();
-		for(Map.Entry<Character,NFAState> entry : transitions.entrySet()){
-			if(entry.getKey().equals(symb)){
+//		Set<NFAState> ret = new HashSet<>();
+//		for(Map.Entry<Character,NFAState> entry : transitions.entrySet()){
+//			if(entry.getKey().equals(symb)){
+//				ret.add(entry.getValue());
+//			}
+//			// Include cases where empty transitions are used to get to a location
+//			if (entry.getKey().equals('e')) {
+//				ret.addAll(entry.getValue().getTo(symb));
+//			}
+//		}
+//		return ret;
+		return recurseBuildStates(symb, false);
+	}
+
+	/**
+	 * Recursively build the states that are accessible from this state on a certain symbol.
+	 * @param symb Symbol to check for
+	 * @param consumed Whether or not this symbol has already been consumed on this path
+	 * @return The states that are available on this symbol
+	 */
+	private Set<NFAState> recurseBuildStates(char symb, boolean consumed) {
+		Set<NFAState> ret = new HashSet<>();
+		for(Map.Entry<Character,NFAState> entry : transitions.entrySet()) {
+			// If this transition consumes the symbol, mark it as consumed for the rest of the path and add the state to the set
+			if (entry.getKey().equals(symb)) {
 				ret.add(entry.getValue());
+				ret.addAll(entry.getValue().recurseBuildStates(symb, true));
+			}
+			// If the empty transition exists and input has already been consumed, add the value and all valid children
+			else if (entry.getKey().equals('e')) {
+				if(consumed) ret.add(entry.getValue());
+				ret.addAll(entry.getValue().recurseBuildStates(symb, consumed));
 			}
 		}
 		return ret;

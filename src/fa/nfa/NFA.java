@@ -1,7 +1,6 @@
 package fa.nfa;
 
-import java.util.LinkedHashSet;
-import java.util.Set;
+import java.util.*;
 
 import fa.State;
 import fa.dfa.DFA;
@@ -84,8 +83,51 @@ public class NFA implements NFAInterface {
 
     @Override
     public DFA getDFA() {
-        // TODO Auto-generated method stub
-        return null;
+        Set<Set<NFAState>> DFAStateTracker = new HashSet<>();
+        Queue<Set<NFAState>> queue = new LinkedList<>();
+        DFA dfa = new DFA();
+        Set<NFAState> initial = eClosure(start);
+        dfa.addStartState(getStateName(initial));
+        queue.add(initial);
+        while(!queue.isEmpty()) {
+            Set<NFAState> current = queue.poll();
+            // Find all connected states
+            for(char c : getABC()) {
+                Set<NFAState> next = statesByInput(current, c);
+                if(!DFAStateTracker.contains(next)) {
+                    DFAStateTracker.add(next);
+                    queue.add(next);
+                    dfa.addState(getStateName(next));
+                }
+                dfa.addTransition(getStateName(current), c, getStateName(next));
+            }
+        }
+        return dfa;
+    }
+
+    /**
+     * Get all states that lead from a set of states given an input.
+     * @param pseudoDFAState Set of states representing a DFA state
+     * @param input input to consider
+     * @return All states leading from pseudoDFAState on input
+     */
+    private Set<NFAState> statesByInput(Set<NFAState> pseudoDFAState, char input) {
+        Set<NFAState> result = new HashSet<>();
+        for(NFAState state : pseudoDFAState) {
+            result.addAll(state.getTo(input));
+        }
+        return result;
+    }
+
+    private String getStateName(Set<NFAState> states) {
+        StringBuilder result = new StringBuilder("[");
+        for(NFAState state : states) {
+            result.append(state.getName()).append(", ");
+        }
+        // Remove last comma and space -- lazy way
+        result.delete(result.length() - 3, result.length() - 1);
+        result.append("]");
+        return result.toString();
     }
 
     @Override
@@ -96,8 +138,17 @@ public class NFA implements NFAInterface {
 
     @Override
     public Set<NFAState> eClosure(NFAState s) {
-        // TODO Auto-generated method stub
-        return start.getTo('e');
+        Set<NFAState> result = new HashSet<>();
+        result.add(s);
+        // Base case: state has no empty transitions
+        if(s.getTo('e').size() == 0) {
+            return result;
+        }
+        // DFS -- s.getTo is an abstracted recursive function
+        for(NFAState state : s.getTo('e')) {
+            result.addAll(eClosure(state));
+        }
+        return result;
     }
 
     public NFAState getStateByName(String name) {
