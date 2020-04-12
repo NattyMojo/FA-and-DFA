@@ -49,6 +49,9 @@ public class NFA implements NFAInterface {
         NFAState from = getStateByName(fromState);
         NFAState to = getStateByName(toState);
         from.addTransition(onSymb, to);
+        if(!ordAbc.contains(onSymb)){
+			ordAbc.add(onSymb);
+		}
     }
 
     @Override
@@ -125,7 +128,7 @@ public class NFA implements NFAInterface {
             result.append(state.getName()).append(", ");
         }
         // Remove last comma and space -- lazy way
-        result.delete(result.length() - 3, result.length() - 1);
+        result.delete(result.length() - 2, result.length());
         result.append("]");
         return result.toString();
     }
