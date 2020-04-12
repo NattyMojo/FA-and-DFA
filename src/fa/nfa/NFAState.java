@@ -2,7 +2,6 @@ package fa.nfa;
 
 import java.util.HashMap;
 import java.util.HashSet;
-import java.util.List;
 import java.util.Map;
 import java.util.Set;
 
@@ -57,7 +56,7 @@ public class NFAState extends State {
 	/**
 	 * Add the transition from <code> this </code> object
 	 * @param onSymb the alphabet symbol
-	 * @param toState to DFA state
+	 * @param toState to NFA state
 	 */
 	public void addTransition(char onSymb, NFAState toState){
 		if(transitions.containsKey(onSymb)) {
